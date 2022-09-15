@@ -1,0 +1,35 @@
+#version 330
+
+
+in vec3 normal;
+in vec3 lightDir;
+in vec3 pos;
+
+float Ka, Kd, Ks;
+
+uniform vec3 objectColor;
+//vec3 objectColor = vec3(1.0, 0.8, 0.6);
+//uniform float shininess;
+float shininess = 50;
+
+
+void main(){
+
+    float i_diffuse, i_specular, i_ambient;
+    vec3 n;
+    vec3 viewDir = normalize(-pos);
+    vec3 refDir = normalize(-reflect(lightDir, normal));
+
+    Ka = 0.1;
+    Ks = 0.9;
+
+    vec4 color;
+    n = normalize(normal);
+
+    i_diffuse = max(dot(lightDir, n), 0.0);
+    i_specular = max( pow( dot(refDir, viewDir), shininess), 0.0);
+    i_ambient = 1;
+
+    color = vec4(objectColor , 1.0) * i_diffuse + Ks * i_specular + i_ambient * Ka;
+    gl_FragColor = color;
+}
